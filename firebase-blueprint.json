@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "preferences": { "type": "object", "properties": { "mainPlatform": { "type": "string" } } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email", "createdAt"]
+    },
+    "Game": {
+      "title": "Game",
+      "description": "Metadata for a video game.",
+      "type": "object",
+      "properties": {
+        "gameId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "coverUrl": { "type": "string" },
+        "releaseDate": { "type": "string" },
+        "genres": { "type": "array", "items": { "type": "string" } },
+        "platforms": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["gameId", "title"]
+    },
+    "UserGame": {
+      "title": "UserGame",
+      "description": "A user's personal relationship with a game (backlog, playing, completed).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "gameId": { "type": "string" },
+        "title": { "type": "string" },
+        "coverUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["backlog", "playing", "completed", "wishlist"] },
+        "platforms": { "type": "array", "items": { "type": "string" } },
+        "progress": { "type": "number", "description": "Percentage completion (0-100)" },
+        "hoursPlayed": { "type": "number" },
+        "rating": { "type": "number", "minimum": 0, "maximum": 5 },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "isArchived": { "type": "boolean" },
+        "notes": { "type": "string" },
+        "gallery": { "type": "array", "items": { "type": "string" }, "description": "URLs of game screenshots/moments" },
+        "lastPlayed": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "status", "title"]
+    },
+    "WishlistItem": {
+      "title": "WishlistItem",
+      "description": "Items in the user's wishlist.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "gameId": { "type": "string" },
+        "title": { "type": "string" },
+        "coverUrl": { "type": "string" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "platforms": { "type": "array", "items": { "type": "string" } },
+        "releaseDate": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "gameId", "title"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles."
+    },
+    "/games/{gameId}": {
+      "schema": "Game",
+      "description": "Global game database."
+    },
+    "/users/{userId}/games/{userGameId}": {
+      "schema": "UserGame",
+      "description": "Personal library of games for a user."
+    },
+    "/users/{userId}/wishlist/{wishlistId}": {
+      "schema": "WishlistItem",
+      "description": "User's wishlist."
+    }
+  }
+}
